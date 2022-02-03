@@ -1,13 +1,16 @@
 import React, { useState } from "react";
 import {
+	Box,
   Button,
   Checkbox,
   FormControlLabel,
   FormGroup,
   TextField,
+  Typography,
 } from "@material-ui/core";
+import { Alert, AlertTitle } from "@material-ui/lab";
 
-function FormularioCadastro({ submit }) {
+function FormularioCadastro({ submit, validarCpf }) {
   const [nome, setNome] = useState("");
   const [sobrenome, setSobrenome] = useState("");
   const [cpf, setCpf] = useState("");
@@ -25,13 +28,30 @@ function FormularioCadastro({ submit }) {
     novidades: novidades,
   };
 
+  const [submitValido, setSubmitValido] = useState(true);
+
   return (
     <form
       onSubmit={(e) => {
         e.preventDefault();
+		if (!submitValido) return
         submit(dados);
       }}
     >
+		<Box textAlign='center'>
+			<Typography variant='h4'>Formulário de cadastro</Typography>
+		</Box>
+		
+
+      {submitValido ? (
+        ""
+      ) : (
+        <Alert severity="error">
+          {" "}
+          <AlertTitle>Erro!</AlertTitle> Há campos vazios ou inválidos{" "}
+        </Alert>
+      )}
+
       <TextField
         value={nome}
         id="nome"
@@ -65,16 +85,29 @@ function FormularioCadastro({ submit }) {
         error={!erros.cpf.eValido}
         helperText={erros.cpf.msgAjuda}
         onBlur={(e) => {
-          if (cpf.length != 11) {
+          if (
+            cpf.replaceAll(".", "").replaceAll("-", "").replaceAll(" ", "")
+              .length != 11
+          ) {
             setErros({
-              cpf: { eValido: false, msgAjuda: "O CPF deve ter 11 dígitos." },
+              cpf: { eValido: false, msgAjuda: "CPF deve ter 11 dígitos." },
             });
           } else {
-            setErros({ cpf: { eValido: true, msgAjuda: "" } });
+            validarCpf(cpf)
+              ? setErros({ cpf: { eValido: true, msgAjuda: "" } })
+              : setErros({
+                  cpf: { eValido: false, msgAjuda: "CPF inválido." },
+                });
           }
+          setSubmitValido(erros.cpf.eValido);
         }}
         onChange={(e) => {
-          setCpf(e.target.value);
+          setCpf(
+            e.target.value
+              .replaceAll(".", "")
+              .replaceAll("-", "")
+              .replaceAll(" ", "")
+          );
         }}
       />
 
@@ -105,7 +138,16 @@ function FormularioCadastro({ submit }) {
         />
       </FormGroup>
 
-      <Button variant="contained" color="primary" type="submit">
+      <Button
+        variant="contained"
+        color="primary"
+        type="submit"
+        onClick={() => {
+          !validarCpf(cpf) || nome.length == 0 || sobrenome.length == 0
+            ? setSubmitValido(false)
+            : setSubmitValido(true);
+        }}
+      >
         Enviar
       </Button>
     </form>

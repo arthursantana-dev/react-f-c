@@ -1,0 +1,12 @@
+{
+  "files": {
+    "main.css": "//github.com/arthursantana-dev/react-function-components/static/css/main.31d6cfe0.css",
+    "main.js": "//github.com/arthursantana-dev/react-function-components/static/js/main.734a4340.js",
+    "index.html": "//github.com/arthursantana-dev/react-function-components/index.html",
+    "main.734a4340.js.map": "//github.com/arthursantana-dev/react-function-components/static/js/main.734a4340.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.31d6cfe0.css",
+    "static/js/main.734a4340.js"
+  ]
+}
